@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+{% block title %}{{ movie.title }}{% endblock %}
+{% block content %}
+<div class="bg-gray-800 rounded-lg shadow-lg p-8">
+    <div class="flex flex-col md:flex-row gap-8">
+        <div class="md:w-1/3">
+            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="w-full h-auto rounded-lg">
+        </div>
+        <div class="md:w-2/3">
+            <h1 class="text-4xl font-bold mb-4">{{ movie.title }}</h1>
+            <p class="text-gray-300 mb-6">{{ movie.description }}</p>
+            <p class="text-gray-400 mb-6"><strong>Duration:</strong> {{ movie.duration_minutes }} minutes</p>
+
+            <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-600 pb-2">Available Shows</h2>
+            {% if shows %}
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {% for show in shows %}
+                    <a href="{{ url_for('book_show', show_id=show.id) }}" class="block bg-gray-700 hover:bg-indigo-600 text-center p-4 rounded-md transition-colors">
+                        <span class="font-bold text-lg">{{ show.show_date }}</span>
+                        <span class="block text-gray-300">{{ show.show_time }}</span>
+                    </a>
+                {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-gray-400">No shows available for this movie yet. Please check back later.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

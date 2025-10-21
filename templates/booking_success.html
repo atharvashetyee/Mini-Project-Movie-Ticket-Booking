@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+{% block title %}Booking Successful{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg text-center">
+    <div class="w-20 h-20 mx-auto bg-green-500 rounded-full flex items-center justify-center mb-6">
+        <i class="fas fa-check text-4xl text-white"></i>
+    </div>
+    <h1 class="text-4xl font-bold mb-4">Booking Successful!</h1>
+    <p class="text-gray-300 mb-8">Your ticket has been confirmed. Enjoy the show!</p>
+
+    <div class="bg-gray-700 p-6 rounded-lg text-left divide-y divide-gray-600">
+        <div class="py-4">
+            <p class="text-gray-400">Booking ID</p>
+            <p class="text-xl font-mono font-semibold">{{ booking.booking_id }}</p>
+        </div>
+         <div class="py-4">
+            <p class="text-gray-400">Movie</p>
+            <p class="text-xl font-semibold">{{ booking.title }}</p>
+        </div>
+        <div class="py-4">
+            <p class="text-gray-400">Show Details</p>
+            <p class="text-xl font-semibold">{{ booking.show_date }} at {{ booking.show_time }}</p>
+        </div>
+        <div class="py-4">
+            <p class="text-gray-400">Seats</p>
+            <p class="text-xl font-semibold">
+                {% for seat in seats %}<span class="inline-block bg-gray-600 px-3 py-1 rounded-md mr-2">{{ seat.seat_number }}</span>{% endfor %}
+            </p>
+        </div>
+        {% if food_orders %}
+        <div class="py-4">
+            <p class="text-gray-400">Food & Beverages</p>
+            <ul class="text-lg">
+                {% for order in food_orders %}
+                <li>{{ order.quantity }} x {{ order.name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <div class="py-4 text-right">
+            <p class="text-gray-400">Total Amount Paid</p>
+            <p class="text-3xl font-bold text-green-400">₹{{ "%.2f"|format(booking.total_price) }}</p>
+        </div>
+    </div>
+    
+    <a href="{{ url_for('index') }}" class="mt-8 inline-block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-md">
+        Back to Home
+    </a>
+</div>
+{% endblock %}

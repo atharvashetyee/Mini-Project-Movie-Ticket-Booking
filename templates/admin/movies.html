@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+{% block title %}Manage Movies{% endblock %}
+{% block content %}
+<div class="flex">
+    <!-- Sidebar -->
+    <div class="w-64 bg-gray-800 p-6 rounded-lg shadow-lg mr-8">
+        <h2 class="text-2xl font-bold mb-6">Admin Menu</h2>
+        <nav class="space-y-2">
+            <a href="{{ url_for('admin_dashboard') }}" class="block py-2 px-4 hover:bg-gray-700 rounded-md">Dashboard</a>
+            <a href="{{ url_for('admin_movies') }}" class="block py-2 px-4 bg-indigo-600 rounded-md">Manage Movies</a>
+            <a href="{{ url_for('admin_shows') }}" class="block py-2 px-4 hover:bg-gray-700 rounded-md">Manage Shows</a>
+            <a href="{{ url_for('admin_bookings') }}" class="block py-2 px-4 hover:bg-gray-700 rounded-md">View Bookings</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-4xl font-bold">Manage Movies</h1>
+            <a href="{{ url_for('add_movie') }}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md">Add New Movie</a>
+        </div>
+
+        <div class="bg-gray-800 rounded-lg shadow-lg overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-gray-700">
+                        <th class="p-4">Poster</th>
+                        <th class="p-4">Title</th>
+                        <th class="p-4">Description</th>
+                        <th class="p-4">Duration (min)</th>
+                        <th class="p-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for movie in movies %}
+                    <tr class="border-b border-gray-700">
+                        <td class="p-4"><img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="w-16 h-24 object-cover rounded"></td>
+                        <td class="p-4 font-semibold">{{ movie.title }}</td>
+                        <td class="p-4 text-gray-400 text-sm max-w-sm">{{ movie.description[:100] }}...</td>
+                        <td class="p-4">{{ movie.duration_minutes }}</td>
+                        <td class="p-4">
+                            <form action="{{ url_for('delete_movie', movie_id=movie.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this movie and all its associated shows? This action cannot be undone.');">
+                                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MovieFlix{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .seat {
+            width: 40px;
+            height: 40px;
+            margin: 3px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .seat.selected {
+            background-color: #4ade80; /* green-400 */
+        }
+        .seat.booked {
+            background-color: #f87171; /* red-400 */
+            cursor: not-allowed;
+        }
+        .seat:not(.booked):hover {
+            background-color: #60a5fa; /* blue-400 */
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <nav class="bg-gray-800 shadow-lg">
+        <div class="container mx-auto px-6 py-3">
+            <div class="flex items-center justify-between">
+                <a href="{{ url_for('index') }}" class="text-2xl font-bold text-white">MovieFlix <i class="fas fa-film"></i></a>
+                <div class="flex items-center">
+                    {% if current_user %}
+                        {% if current_user.is_admin %}
+                             <a href="{{ url_for('admin_dashboard') }}" class="px-4 py-2 text-white hover:text-gray-300">Admin Dashboard</a>
+                        {% else %}
+                             <a href="{{ url_for('my_bookings') }}" class="px-4 py-2 text-white hover:text-gray-300">My Bookings</a>
+                        {% endif %}
+                        <span class="text-gray-400 mx-2">|</span>
+                        <span class="text-white mr-4">Welcome, {{ current_user.username }}</span>
+                        <a href="{{ url_for('logout') }}" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="px-4 py-2 text-white hover:text-gray-300">Login</a>
+                        <a href="{{ url_for('register') }}" class="ml-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container mx-auto px-6 py-8">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="p-4 mb-4 text-sm text-{{ 'green' if category == 'success' else 'red' }}-700 bg-{{ 'green' if category == 'success' else 'red' }}-100 rounded-lg" role="alert">
+                    <span class="font-medium">{{ message }}</span>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-gray-800 mt-12 py-4">
+        <div class="container mx-auto px-6 text-center text-gray-400">
+            &copy; 2025 MovieFlix. All Rights Reserved.
+        </div>
+    </footer>
+</body>
+</html>

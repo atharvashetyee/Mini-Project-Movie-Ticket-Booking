@@ -1,0 +1,212 @@
+{% extends 'layout.html' %}
+{% block title %}Select Seats{% endblock %}
+
+{% block content %}
+<style>
+    /* Custom styles for the seat selection grid */
+    .seat-map {
+        display: grid;
+        grid-template-columns: auto repeat(10, 1fr) auto; /* Grid for row labels and seats */
+        gap: 8px;
+        justify-items: center;
+        align-items: center;
+        padding: 0 1rem;
+    }
+    .seat-row-label {
+        font-weight: bold;
+        color: #9ca3af;
+    }
+    .seat {
+        width: 32px;
+        height: 32px;
+        background-color: #4b5563; /* Available seat color */
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+        color: white;
+    }
+    .seat:hover:not(.booked):not(.selected) {
+        transform: scale(1.1);
+        background-color: #6b7280;
+    }
+    .seat.selected {
+        background-color: #10b981; /* Selected seat color */
+        transform: scale(1.1);
+    }
+    .seat.booked {
+        background-color: #ef4444; /* Booked seat color */
+        cursor: not-allowed;
+    }
+    .seat input[type="checkbox"] {
+        display: none; /* Hide the actual checkbox */
+    }
+    .screen {
+        width: 80%;
+        margin: 0 auto 2rem auto;
+        padding: 0.5rem;
+        background-color: #d1d5db;
+        color: #1f2937;
+        text-align: center;
+        font-weight: bold;
+        border-radius: 8px 8px 0 0;
+        box-shadow: 0 -4px 15px rgba(255, 255, 255, 0.2);
+    }
+    .legend {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+    .legend-item { display: flex; align-items: center; gap: 0.5rem; }
+    .legend-box { width: 20px; height: 20px; border-radius: 4px; }
+</style>
+
+<div class="max-w-4xl mx-auto bg-gray-800 p-8 rounded-lg shadow-2xl">
+    <h1 class="text-3xl font-bold text-center mb-2">Select Your Seats</h1>
+    <p class="text-center text-gray-400 mb-6">{{ show.show_date }} - {{ show.show_time }}</p>
+
+    <div class="screen">SCREEN</div>
+
+    <form method="POST">
+        <div class="seat-map mb-8">
+            {% for row in ['A', 'B', 'C', 'D', 'E', 'F'] %}
+                <div class="seat-row-label">{{ row }}</div>
+                {% for seat_num in range(1, 11) %}
+                    {% set seat_id = row ~ seat_num %}
+                    <label class="seat 
+                        {% if seat_id in booked_seats %} booked {% else %} available {% endif %}" 
+                        for="{{ seat_id }}">
+                        <input type="checkbox" name="seats" value="{{ seat_id }}" id="{{ seat_id }}" 
+                            {% if seat_id in booked_seats %}disabled{% endif %} class="seat-checkbox">
+                        {{ seat_num }}
+                    </label>
+                {% endfor %}
+                <div class="seat-row-label">{{ row }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="legend">
+            <div class="legend-item"><div class="legend-box" style="background-color: #4b5563;"></div><span>Available</span></div>
+            <div class="legend-item"><div class="legend-box" style="background-color: #10b981;"></div><span>Selected</span></div>
+            <div class="legend-item"><div class="legend-box" style="background-color: #ef4444;"></div><span>Booked</span></div>
+        </div>
+
+        <hr class="my-8 border-gray-600">
+
+        <h2 class="text-2xl font-bold mb-4">Add Food & Beverages</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {% for item in food_items %}
+            <div class="bg-gray-700 p-4 rounded-md flex justify-between items-center">
+                <div>
+                    <h3 class="font-semibold">{{ item.name }}</h3>
+                    <p class="text-gray-400">₹{{ item.price }}</p>
+                </div>
+                <input type="number" name="food_{{ item.id }}" min="0" value="0" 
+                       class="w-20 bg-gray-800 border border-gray-600 rounded-md p-2 text-center food-item"
+                       data-price="{{ item.price }}">
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Real-time Price Display Section -->
+        <div class="mt-8 bg-gray-900 p-6 rounded-lg">
+            <div class="flex justify-between items-center text-lg mb-2">
+                <span class="text-gray-400">Selected Seats:</span>
+                <span id="selected-seats-display" class="font-semibold">None</span>
+            </div>
+             <div class="flex justify-between items-center text-lg mb-4">
+                <span class="text-gray-400">Seat Total:</span>
+                <span id="seats-total-display" class="font-semibold">₹0</span>
+            </div>
+            <div class="flex justify-between items-center text-lg mb-4">
+                <span class="text-gray-400">Food & Beverage Total:</span>
+                <span id="food-total-display" class="font-semibold">₹0</span>
+            </div>
+            <hr class="my-2 border-gray-600">
+            <div class="flex justify-between items-center text-2xl font-bold mt-4">
+                <span>Grand Total:</span>
+                <span id="total-price" class="text-indigo-400">₹0</span>
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-md transition-colors">Book Now</button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const seatPrice = 200;
+    const availableSeats = document.querySelectorAll('.seat.available');
+    const foodItems = document.querySelectorAll('.food-item');
+    
+    // Price display elements
+    const selectedSeatsDisplayEl = document.getElementById('selected-seats-display');
+    const seatsTotalDisplayEl = document.getElementById('seats-total-display');
+    const foodTotalDisplayEl = document.getElementById('food-total-display');
+    const totalPriceEl = document.getElementById('total-price');
+
+    function calculateTotal() {
+        // 1. Calculate seats total
+        const selectedSeatElements = document.querySelectorAll('.seat.selected');
+        const seatsCount = selectedSeatElements.length;
+        const seatsTotal = seatsCount * seatPrice;
+
+        // 2. Display selected seat IDs
+        if (seatsCount > 0) {
+            const seatIds = Array.from(selectedSeatElements).map(seat => seat.getAttribute('for')).join(', ');
+            selectedSeatsDisplayEl.textContent = seatIds;
+        } else {
+            selectedSeatsDisplayEl.textContent = 'None';
+        }
+
+        // 3. Calculate food total
+        let foodTotal = 0;
+        foodItems.forEach(item => {
+            const quantity = parseInt(item.value, 10) || 0;
+            const price = parseFloat(item.dataset.price);
+            if (quantity > 0) {
+                foodTotal += quantity * price;
+            }
+        });
+
+        // 4. Update all price displays
+        seatsTotalDisplayEl.textContent = `₹${seatsTotal}`;
+        foodTotalDisplayEl.textContent = `₹${foodTotal}`;
+        totalPriceEl.textContent = `₹${seatsTotal + foodTotal}`;
+    }
+
+    // Add click event listener to each available seat
+    availableSeats.forEach(seat => {
+        seat.addEventListener('click', (e) => {
+            // This prevents the label's default behavior from interfering
+            e.preventDefault(); 
+            
+            // Toggle the visual style
+            seat.classList.toggle('selected');
+            
+            // Toggle the actual checkbox
+            const checkbox = seat.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            
+            // Recalculate everything
+            calculateTotal();
+        });
+    });
+
+    // Add input event listener to each food item
+    foodItems.forEach(item => {
+        item.addEventListener('input', calculateTotal);
+    });
+
+    // Initial calculation when the page loads
+    calculateTotal();
+});
+</script>
+{% endblock %}
+

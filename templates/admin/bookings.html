@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+{% block title %}View All Bookings{% endblock %}
+{% block content %}
+<div class="flex">
+    <!-- Sidebar -->
+    <div class="w-64 bg-gray-800 p-6 rounded-lg shadow-lg mr-8">
+        <h2 class="text-2xl font-bold mb-6">Admin Menu</h2>
+        <nav class="space-y-2">
+            <a href="{{ url_for('admin_dashboard') }}" class="block py-2 px-4 hover:bg-gray-700 rounded-md">Dashboard</a>
+            <a href="{{ url_for('admin_movies') }}" class="block py-2 px-4 hover:bg-gray-700 rounded-md">Manage Movies</a>
+            <a href="{{ url_for('admin_shows') }}" class="block py-2 px-4 hover:bg-gray-700 rounded-md">Manage Shows</a>
+            <a href="{{ url_for('admin_bookings') }}" class="block py-2 px-4 bg-indigo-600 rounded-md">View Bookings</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1">
+        <h1 class="text-4xl font-bold mb-8">All Bookings</h1>
+        <div class="space-y-4">
+            {% for detail in bookings_details %}
+            <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
+                <details>
+                    <summary class="cursor-pointer font-semibold text-lg flex justify-between items-center">
+                        <div>
+                            <span>{{ detail.info.username }} - {{ detail.info.title }}</span>
+                            <span class="text-sm text-gray-400 ml-4">{{ detail.info.show_date }} @ {{ detail.info.show_time }}</span>
+                        </div>
+                        <div class="font-mono text-indigo-400">
+                           ID: {{ detail.info.booking_id }}
+                        </div>
+                    </summary>
+                    <div class="mt-4 pt-4 border-t border-gray-700">
+                       <p><strong>Seats Booked:</strong> 
+                         {% for seat in detail.seats %}
+                            <span class="bg-gray-700 px-2 py-1 rounded-md mr-1">{{ seat }}</span>
+                         {% endfor %}
+                       </p>
+                       <p class="mt-2"><strong>Total Price:</strong> ₹{{ "%.2f"|format(detail.info.total_price) }}</p>
+                       {% if detail.food_orders %}
+                       <div class="mt-2">
+                           <strong>Food Orders:</strong>
+                           <ul class="list-disc list-inside ml-4 text-gray-300">
+                               {% for item in detail.food_orders %}
+                               <li>{{ item.quantity }} x {{ item.name }} (₹{{ "%.2f"|format(item.price * item.quantity) }})</li>
+                               {% endfor %}
+                           </ul>
+                       </div>
+                       {% endif %}
+                    </div>
+                </details>
+            </div>
+            {% else %}
+            <p class="text-gray-400">No bookings have been made yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

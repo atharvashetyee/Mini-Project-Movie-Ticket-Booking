@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+{% block title %}My Bookings{% endblock %}
+{% block content %}
+<h1 class="text-4xl font-bold mb-8">My Bookings</h1>
+
+<div class="space-y-6">
+    {% for booking_detail in bookings_details %}
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <div class="flex justify-between items-start">
+            <div>
+                <h2 class="text-2xl font-bold">{{ booking_detail.info.title }}</h2>
+                <p class="text-gray-400">{{ booking_detail.info.show_date }} at {{ booking_detail.info.show_time }}</p>
+                <p class="text-sm text-gray-500 mt-2">Booked on: {{ booking_detail.info.booking_date.split(' ')[0] }}</p>
+                <p class="font-mono text-indigo-400 mt-1">ID: {{ booking_detail.info.booking_id }}</p>
+            </div>
+            <div class="text-right">
+                <p class="text-2xl font-bold">₹{{ "%.2f"|format(booking_detail.info.total_price) }}</p>
+            </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-gray-700">
+            <h3 class="font-semibold mb-2">Seats:</h3>
+            <div class="flex flex-wrap gap-2">
+                {% for seat in booking_detail.seats %}
+                <span class="bg-gray-700 px-3 py-1 rounded-md">{{ seat }}</span>
+                {% endfor %}
+            </div>
+             {% if booking_detail.food %}
+             <h3 class="font-semibold mt-4 mb-2">Food Ordered:</h3>
+              <ul class="list-disc list-inside text-gray-300">
+                {% for item in booking_detail.food %}
+                    <li>{{ item.quantity }} x {{ item.name }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <p class="text-gray-400 text-center text-xl mt-10">You have no bookings yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

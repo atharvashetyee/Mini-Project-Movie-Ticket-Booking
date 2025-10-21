@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<div class="flex">
+    <!-- Sidebar -->
+    <div class="w-64 bg-gray-800 p-6 rounded-lg shadow-lg mr-8">
+        <h2 class="text-2xl font-bold mb-6">Admin Menu</h2>
+        <nav class="space-y-2">
+            <a href="{{ url_for('admin_dashboard') }}" class="block py-2 px-4 bg-indigo-600 rounded-md">Dashboard</a>
+            <a href="{{ url_for('admin_movies') }}" class="block py-2 px-4 hover:bg-gray-700 rounded-md">Manage Movies</a>
+            <a href="{{ url_for('admin_shows') }}" class="block py-2 px-4 hover:bg-gray-700 rounded-md">Manage Shows</a>
+            <a href="{{ url_for('admin_bookings') }}" class="block py-2 px-4 hover:bg-gray-700 rounded-md">View Bookings</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1">
+        <h1 class="text-4xl font-bold mb-8">Admin Dashboard</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h3 class="text-gray-400 text-lg">Total Users</h3>
+                <p class="text-4xl font-bold">{{ stats.total_users }}</p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h3 class="text-gray-400 text-lg">Total Movies</h3>
+                <p class="text-4xl font-bold">{{ stats.total_movies }}</p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h3 class="text-gray-400 text-lg">Total Shows</h3>
+                <p class="text-4xl font-bold">{{ stats.total_shows }}</p>
+            </div>
+             <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h3 class="text-gray-400 text-lg">Total Bookings</h3>
+                <p class="text-4xl font-bold">{{ stats.total_bookings }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
