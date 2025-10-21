@@ -20,7 +20,7 @@ Quick Start
 
 1. Setup Environment:
 
-# Clone the repo, create a virtual environment, and activate it.
+Clone the repo, create a virtual environment, and activate it.
 git clone [https://github.com/your-username/movie-ticket-system.git](https://github.com/your-username/movie-ticket-system.git)
 cd movie-ticket-system
 python -m venv venv && source venv/bin/activate # Or venv\Scripts\activate for Windows
@@ -28,7 +28,7 @@ python -m venv venv && source venv/bin/activate # Or venv\Scripts\activate for W
 
 2. Install Dependencies:
 
-# Create a requirements.txt file with "Flask" and "Werkzeug" then run:
+Create a requirements.txt file with "Flask" and "Werkzeug" then run:
 pip install -r requirements.txt
 
 
@@ -52,5 +52,6 @@ Admin Login:
 Username: admin
 
 Password: adminpassword
+
 
 User Login: Register a new account on the site.
