@@ -1,7 +1,7 @@
 Movie Ticket Booking System
 
 A full-stack web application for booking movie tickets, built with Python, Flask, and SQLite3. Features a user booking interface and a full admin panel for site management.
-
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Key Features
 
 User Authentication: Secure registration and login.
@@ -11,11 +11,11 @@ Interactive Seat Selection: Dynamic seat map with real-time price calculation.
 Admin Panel: Manage movies, schedule shows, and view all bookings.
 
 CRUD Functionality: Admins can create, read, update, and delete movies.
-
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Tech Stack
 
 Backend: Python, Flask | Frontend: HTML, Tailwind CSS, JavaScript | Database: SQLite3
-
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Quick Start
 
 1. Setup Environment:
@@ -42,10 +42,8 @@ python database.py
 
 flask run
 
-
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 The application is now live at http://127.0.0.1:5000.
-
-Usage
 
 Admin Login:
 
@@ -55,3 +53,4 @@ Password: adminpassword
 
 
 User Login: Register a new account on the site.
+
