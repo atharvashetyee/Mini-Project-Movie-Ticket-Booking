@@ -104,18 +104,4 @@ Hi there, I'm Atharva Shetye. I am a passionate Computer Science Engineer specia
 
 📫 You can reach me at: shetyeatharva4@gmail.com or connect with me on LinkedIn.
 
-📊 My GitHub Stats
-
-<p align="center">
-<a href="https://github.com/anuraghazra/github-readme-stats">
-<img align="center" src="https://github-readme-stats.vercel.app/api?username=atharvashetyee&show_icons=true&theme=radical" />
-</a>
-<a href="https://github.com/anuraghazra/github-readme-stats">
-<img align="center" src="https://github-readme-stats.vercel.app/api/top-langs/?username=atharvashetyee&layout=compact&theme=radical" />
-</a>
-</p>
-<p align="center">
-<img src="https://raw.githubusercontent.com/platane/platane/output/github-contribution-grid-snake.svg?user=atharvashetyee" alt="snake">
-</p>
-
-⭐ Star this project on GitHub if you find it useful!
+project on GitHub if you find it useful!
